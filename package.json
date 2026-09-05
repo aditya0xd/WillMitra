@@ -4,9 +4,9 @@
   "description": "An application that will help manage will and testament documents for users.",
   "type": "module",
   "scripts": {
-    "dev": "tsx --env-file=.env.development --watch src/index.ts",
+    "dev": "tsx --env-file=.env.development --watch src/server.ts",
     "build": "tsc -p tsconfig.json && tsc-alias",
-    "start": "node --env-file=.env.production dist/index.js",
+    "start": "node --env-file=.env.production dist/server.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix .",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@tsconfig/node22": "^22.0.6",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.4.1",
     "eslint": "^10.9.1",
