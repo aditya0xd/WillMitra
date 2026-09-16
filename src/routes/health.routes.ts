@@ -1,20 +1,14 @@
-import type { Routes } from "@interface/routes.interface.js";
-
 import { type Request, type Response, Router } from "express";
 
-class HealthRoutes implements Routes {
-  public path = "/health";
-  public router = Router();
+const healthRouter = Router();
 
-  constructor() {
-    this.initializeRoutes();
-  }
+healthRouter.get("/", (req: Request, res: Response) => {
+  // Cookies that have not been signed
+  console.log("Cookies: ", req.cookies);
 
-  private initializeRoutes() {
-    this.router.get("/", (req: Request, res: Response) => {
-      res.status(200).json({ message: "OK" });
-    });
-  }
-}
+  // Cookies that have been signed
+  console.log("Signed Cookies: ", req.signedCookies);
+  res.status(200).json({ message: "ok" });
+});
 
-export default HealthRoutes;
+export default healthRouter;

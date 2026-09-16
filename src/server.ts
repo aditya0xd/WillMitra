@@ -1,7 +1,8 @@
-import { App } from "@app.js";
+import { app } from "@app.js";
+import { env } from "@env.js";
 
-import HealthRoutes from "./routes/health.routes.js";
+const { PORT } = env;
 
-const server = new App([new HealthRoutes()]);
-
-server.listen();
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

@@ -1,36 +1,31 @@
-import type { Routes } from "@interface/routes.interface.js";
+import type { Response } from "express";
 
-import { env } from "@env.js";
+import { authMiddleware } from "@middleware/auth.middleware.js";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 
-const { NODE_ENV, PORT } = env;
+import type { AuthenticatedRequest } from "./middleware/auth.middleware.js";
 
-export class App {
-  public app: express.Application;
-  public env: string;
-  public port: number | string;
+import authRouter from "./modules/auth/auth.route.js";
+import healthRouter from "./routes/health.routes.js";
 
-  constructor(routes: Routes[]) {
-    this.app = express();
-    this.env = NODE_ENV;
-    this.port = PORT;
+export const createApp = () => {
+  const app = express();
 
-    this.app.use(cors());
-    this.app.use(express.json());
+  app.use(cors({ credentials: true, origin: true }));
+  app.use(cookieParser());
+  app.use(express.json());
 
-    this.initializeRoutes(routes);
-  }
+  // Initialize all routes
+  app.use("/health", healthRouter);
+  app.use("/auth", authRouter);
+  app.get("/me", authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+    const user = req.user;
+    return res.status(200).json({ user });
+  });
 
-  public listen() {
-    this.app.listen(this.port, () => {
-      console.log(`Server running on port ${this.port}`);
-    });
-  }
+  return app;
+};
 
-  private initializeRoutes(routes: Routes[]) {
-    routes.forEach((route) => {
-      this.app.use(route.path, route.router);
-    });
-  }
-}
+export const app = createApp();
